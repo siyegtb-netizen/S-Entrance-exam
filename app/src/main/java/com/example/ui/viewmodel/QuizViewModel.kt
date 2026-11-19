@@ -6,7 +6,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.local.ApiKeyPreferences
+import com.example.data.local.QuizPreferences
 import com.example.data.model.DifficultyMode
 import com.example.data.model.GenerationStage
 import com.example.data.model.QuizQuestion
@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 
 data class SetupUiState(
     val selectedPdf: SelectedPdf? = null,
-    val apiKey: String = "",
     val topic: String = "",
     val questionCount: Int = 10,
     val difficulty: DifficultyMode = DifficultyMode.ENTRANCE_CHALLENGE,
@@ -36,7 +35,7 @@ data class SetupUiState(
     val errorMessage: String? = null
 ) {
     val canGenerate: Boolean
-        get() = selectedPdf != null && apiKey.isNotBlank() && topic.isNotBlank() && !isGenerating
+        get() = selectedPdf != null && topic.isNotBlank() && !isGenerating
 }
 
 data class QuizSlideUiState(
@@ -62,7 +61,7 @@ data class QuizSlideUiState(
 
 class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val preferences = ApiKeyPreferences(application)
+    private val preferences = QuizPreferences(application)
     private val geminiService = GeminiQuizService(application)
 
     private val _setupState = MutableStateFlow(SetupUiState())
@@ -78,11 +77,9 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            val savedKey = preferences.savedApiKey.first()
             val savedTopic = preferences.savedLastTopic.first()
             _setupState.update { state ->
                 state.copy(
-                    apiKey = state.apiKey.ifBlank { savedKey },
                     topic = state.topic.ifBlank { savedTopic }
                 )
             }
@@ -130,17 +127,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         _setupState.update { it.copy(selectedPdf = null, errorMessage = null) }
     }
 
-    fun onApiKeyChanged(value: String) {
-        _setupState.update { it.copy(apiKey = value, errorMessage = null) }
-    }
-
-    fun onClearApiKey() {
-        _setupState.update { it.copy(apiKey = "", errorMessage = null) }
-        viewModelScope.launch {
-            preferences.clearApiKey()
-        }
-    }
-
     fun onTopicChanged(value: String) {
         _setupState.update { it.copy(topic = value, errorMessage = null) }
     }
@@ -164,10 +150,6 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             _setupState.update { it.copy(errorMessage = "Please upload a PDF file first.") }
             return
         }
-        if (current.apiKey.isBlank()) {
-            _setupState.update { it.copy(errorMessage = "Please enter your Gemini API key.") }
-            return
-        }
         if (current.topic.isBlank()) {
             _setupState.update { it.copy(errorMessage = "Please enter a topic or unit (e.g., Grade 12 Unit 1 and 2).") }
             return
@@ -184,11 +166,9 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             try {
-                preferences.saveApiKey(current.apiKey)
                 preferences.saveLastTopic(current.topic)
 
                 val session = geminiService.generateQuizFromPdf(
-                    apiKey = current.apiKey,
                     pdfUri = pdf.uri,
                     pdfDisplayName = pdf.displayName,
                     topic = current.topic,

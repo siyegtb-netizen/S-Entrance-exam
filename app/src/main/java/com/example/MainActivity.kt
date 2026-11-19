@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,90 +26,92 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        configureAppCheck(this, intent)
+
         enableEdgeToEdge()
         setContent {
-            val viewModel: QuizViewModel = viewModel()
-            val setupState by viewModel.setupState.collectAsStateWithLifecycle()
-            val quizState by viewModel.quizState.collectAsStateWithLifecycle()
-            val darkModeOverride by viewModel.darkModeOverride.collectAsStateWithLifecycle()
-            val systemDark = isSystemInDarkTheme()
-            val isDarkMode = darkModeOverride ?: systemDark
+            SEntranceQuizApp()
+        }
+    }
+}
 
-            SEntranceQuizTheme(darkTheme = isDarkMode) {
-                val navController = rememberNavController()
+@Composable
+fun SEntranceQuizApp(
+    quizViewModel: QuizViewModel = viewModel()
+) {
+    val systemDark = isSystemInDarkTheme()
+    val darkModeOverride by quizViewModel.darkModeOverride.collectAsStateWithLifecycle()
+    val isDarkMode = darkModeOverride ?: systemDark
 
-                NavHost(
-                    navController = navController,
-                    startDestination = ROUTE_SETUP
-                ) {
-                    composable(ROUTE_SETUP) {
-                        SetupScreen(
-                            uiState = setupState,
-                            isDarkMode = isDarkMode,
-                            onToggleDarkMode = { viewModel.toggleDarkMode(isDarkMode) },
-                            onPdfSelected = viewModel::onPdfSelected,
-                            onClearPdf = viewModel::onClearPdf,
-                            onApiKeyChanged = viewModel::onApiKeyChanged,
-                            onClearApiKey = viewModel::onClearApiKey,
-                            onTopicChanged = viewModel::onTopicChanged,
-                            onQuestionCountSelected = viewModel::onQuestionCountSelected,
-                            onDifficultySelected = viewModel::onDifficultySelected,
-                            onDismissError = viewModel::dismissError,
-                            onGenerateClick = {
-                                viewModel.generateQuiz(
-                                    onSuccess = {
-                                        navController.navigate(ROUTE_QUIZ) {
-                                            launchSingleTop = true
-                                        }
-                                    }
-                                )
-                            },
-                            onCancelGeneration = viewModel::cancelGeneration
-                        )
-                    }
+    val setupState by quizViewModel.setupState.collectAsStateWithLifecycle()
+    val quizState by quizViewModel.quizState.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
 
-                    composable(ROUTE_QUIZ) {
-                        QuizSlideScreen(
-                            uiState = quizState,
-                            isDarkMode = isDarkMode,
-                            onToggleDarkMode = { viewModel.toggleDarkMode(isDarkMode) },
-                            onSelectAnswer = viewModel::selectAnswer,
-                            onNextSlide = {
-                                viewModel.nextSlide(
-                                    onFinishQuiz = {
-                                        navController.navigate(ROUTE_RESULT) {
-                                            popUpTo(ROUTE_QUIZ) { inclusive = true }
-                                            launchSingleTop = true
-                                        }
-                                    }
-                                )
-                            },
-                            onPreviousSlide = viewModel::previousSlide,
-                            onJumpToSlide = viewModel::jumpToSlide,
-                            onExitQuiz = {
-                                navController.popBackStack(ROUTE_SETUP, inclusive = false)
+    SEntranceQuizTheme(darkTheme = isDarkMode) {
+        NavHost(
+            navController = navController,
+            startDestination = ROUTE_SETUP
+        ) {
+            composable(ROUTE_SETUP) {
+                SetupScreen(
+                    uiState = setupState,
+                    isDarkMode = isDarkMode,
+                    onToggleDarkMode = { quizViewModel.toggleDarkMode(isDarkMode) },
+                    onPdfSelected = quizViewModel::onPdfSelected,
+                    onClearPdf = quizViewModel::onClearPdf,
+                    onTopicChanged = quizViewModel::onTopicChanged,
+                    onQuestionCountSelected = quizViewModel::onQuestionCountSelected,
+                    onDifficultySelected = quizViewModel::onDifficultySelected,
+                    onDismissError = quizViewModel::dismissError,
+                    onGenerateClick = {
+                        quizViewModel.generateQuiz {
+                            navController.navigate(ROUTE_QUIZ) {
+                                launchSingleTop = true
                             }
-                        )
-                    }
+                        }
+                    },
+                    onCancelGeneration = quizViewModel::cancelGeneration
+                )
+            }
 
-                    composable(ROUTE_RESULT) {
-                        ResultScreen(
-                            session = quizState.session,
-                            isDarkMode = isDarkMode,
-                            onToggleDarkMode = { viewModel.toggleDarkMode(isDarkMode) },
-                            onRetryQuiz = {
-                                viewModel.retryQuiz()
-                                navController.navigate(ROUTE_QUIZ) {
-                                    popUpTo(ROUTE_RESULT) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            },
-                            onNewQuiz = {
-                                navController.popBackStack(ROUTE_SETUP, inclusive = false)
+            composable(ROUTE_QUIZ) {
+                QuizSlideScreen(
+                    uiState = quizState,
+                    isDarkMode = isDarkMode,
+                    onToggleDarkMode = { quizViewModel.toggleDarkMode(isDarkMode) },
+                    onSelectAnswer = quizViewModel::selectAnswer,
+                    onNextSlide = {
+                        quizViewModel.nextSlide {
+                            navController.navigate(ROUTE_RESULT) {
+                                popUpTo(ROUTE_QUIZ) { inclusive = true }
+                                launchSingleTop = true
                             }
-                        )
+                        }
+                    },
+                    onPreviousSlide = quizViewModel::previousSlide,
+                    onJumpToSlide = quizViewModel::jumpToSlide,
+                    onExitQuiz = {
+                        navController.popBackStack(ROUTE_SETUP, inclusive = false)
                     }
-                }
+                )
+            }
+
+            composable(ROUTE_RESULT) {
+                ResultScreen(
+                    session = quizState.session,
+                    isDarkMode = isDarkMode,
+                    onToggleDarkMode = { quizViewModel.toggleDarkMode(isDarkMode) },
+                    onRetryQuiz = {
+                        quizViewModel.retryQuiz()
+                        navController.navigate(ROUTE_QUIZ) {
+                            popUpTo(ROUTE_RESULT) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onNewQuiz = {
+                        navController.popBackStack(ROUTE_SETUP, inclusive = false)
+                    }
+                )
             }
         }
     }

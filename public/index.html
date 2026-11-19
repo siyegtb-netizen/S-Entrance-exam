@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#13294B" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>S Entrance Quiz</title>
+  <link rel="icon" type="image/jpeg" href="./assets/aistudio/image_a3c59f08__1__d6b6b04a.jpg" />
+  <link rel="apple-touch-icon" href="./assets/aistudio/image_a3c59f08__1__d6b6b04a.jpg" />
+  <style>
+    :root {
+      --bg: #FAF8F4;
+      --surface: #FFFFFF;
+      --surface-variant: #F3EFE6;
+      --text: #161B26;
+      --text-muted: #5A6475;
+      --border: #E2DACB;
+      --border-soft: #ECE6DA;
+      --primary: #13294B;
+      --on-primary: #FFFFFF;
+      --primary-container: #DCE6F7;
+      --on-primary-container: #13294B;
+      --secondary: #D97706;
+      --secondary-container: #FEF3C7;
+      --on-secondary-container: #92400E;
+      --correct: #15803D;
+      --correct-bg: #DCFCE7;
+      --correct-border: #22C55E;
+      --incorrect: #B91C1C;
+      --incorrect-bg: #FEE2E2;
+      --incorrect-border: #EF4444;
+      --shadow: 0 8px 24px rgba(19, 41, 75, 0.06);
+      --overlay: rgba(250, 248, 244, 0.92);
+      --font-display: Georgia, "Times New Roman", serif;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0B1320;
+      --surface: #142033;
+      --surface-variant: #1C2C45;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: #2B3C56;
+      --border-soft: #1E2D45;
+      --primary: #60A5FA;
+      --on-primary: #0B1320;
+      --primary-container: #1D3557;
+      --on-primary-container: #F8FAFC;
+      --secondary: #FBBF24;
+      --secondary-container: #452806;
+      --on-secondary-container: #FBBF24;
+      --correct: #4ADE80;
+      --correct-bg: #0D3B22;
+      --correct-border: #4ADE80;
+      --incorrect: #F87171;
+      --incorrect-bg: #451418;
+      --incorrect-border: #F87171;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      --overlay: rgba(11, 19, 32, 0.92);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100%;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* App Container */
+    .app-shell {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px 18px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Header */
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .app-emblem {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 1.5px solid color-mix(in srgb, var(--secondary) 65%, transparent);
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+      background: #0D1628;
+    }
+
+    .brand-titles {
+      min-width: 0;
+    }
+
+    .brand-titles h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-titles p {
+      margin: 2px 0 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface-variant);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, background-color 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-banner {
+      width: 100%;
+      height: 110px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--surface-variant), color-mix(in srgb, var(--primary-container) 45%, var(--surface-variant)));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-svg {
+      width: 100%;
+      max-width: 340px;
+      height: 88px;
+    }
+
+    .badge-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+    }
+
+    .subtle-note {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .hero-desc {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    /* Section Header */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* Error Banner */
+    .error-banner {
+      background: var(--incorrect-bg);
+      border: 1px solid color-mix(in srgb, var(--incorrect-border) 55%, transparent);
+      color: var(--incorrect);
+      border-radius: 16px;
+      padding: 13px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .error-banner-text {
+      flex: 1;
+    }
+
+    .close-small-btn {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 4px;
+      min-width: 32px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+
+    /* Upload Dropzone */
+    .dropzone {
+      width: 100%;
+      border: 1.5px dashed color-mix(in srgb, var(--primary) 45%, transparent);
+      background: color-mix(in srgb, var(--surface-variant) 70%, transparent);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .dropzone.drag-over {
+      border-color: var(--secondary);
+      background: var(--secondary-container);
+    }
+
+    .dropzone-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropzone-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .dropzone-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pdf-ready-box {
+      background: color-mix(in srgb, var(--correct-bg) 65%, transparent);
+      border: 1px solid color-mix(in srgb, var(--correct-border) 60%, transparent);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pdf-ready-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--correct) 16%, transparent);
+      color: var(--correct);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pdf-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pdf-name {
+      font-size: 0.94rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pdf-size {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Inputs */
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.96rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .text-input.with-actions {
+      padding-right: 92px;
+    }
+
+    .text-input:focus {
+      border-color: var(--primary);
+    }
+
+    .input-actions {
+      position: absolute;
+      right: 6px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .field-action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .field-hint {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-hint.ok {
+      color: var(--correct);
+      font-weight: 600;
+    }
+
+    .sub-label {
+      margin: 14px 0 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Chips */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .chip-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .chip-btn {
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .chip-btn.active-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    .chip-btn.active-soft {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+    }
+
+    .chip-btn.active-amber {
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+      border-color: color-mix(in srgb, var(--secondary) 55%, transparent);
+    }
+
+    /* Primary & Outlined Buttons */
+    .btn-primary {
+      width: 100%;
+      min-height: 54px;
+      padding: 12px 20px;
+      border-radius: 16px;
+      border: none;
+      background: var(--primary);
+      color: var(--on-primary);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary:not(:disabled):active {
+      transform: scale(0.99);
+    }
+
+    .btn-primary.btn-finish {
+      background: var(--correct);
+      color: #FFFFFF;
+    }
+
+    .btn-outline {
+      min-height: 48px;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-outline:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .center-hint {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: -6px;
+    }
+
+    /* Quiz Top Bar & Bottom Bar */
+    .quiz-layout {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quiz-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-soft);
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .quiz-topbar-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quiz-title-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .quiz-title-col h2 {
+      margin: 0;
+      font-size: 0.94rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .quiz-title-col span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: var(--surface-variant);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--secondary);
+      transition: width 0.28s ease;
+    }
+
+    .quiz-body {
+      flex: 1;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 12px 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .slide-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px;
+      scrollbar-width: none;
+    }
+
+    .slide-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide-num-pill {
+      min-width: 38px;
+      height: 34px;
+      border-radius: 10px;
+      border: none;
+      background: var(--surface-variant);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .slide-num-pill.current {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    .slide-num-pill.correct {
+      background: var(--correct-bg);
+      color: var(--correct);
+    }
+
+    .slide-num-pill.incorrect {
+      background: var(--incorrect-bg);
+      color: var(--incorrect);
+    }
+
+    /* Slide Transition */
+    .slide-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: slideIn 0.22s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .q-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .q-badge {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .ref-badge {
+      padding: 4px 9px;
+      border-radius: 8px;
+      background: var(--surface-variant);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 100%;
+    }
+
+    .question-text {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.32rem;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* A B C D Option Buttons */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      min-height: 62px;
+      padding: 13px 16px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .option-btn:not(:disabled):hover {
+      border-color: var(--primary);
+    }
+
+    .option-btn:not(:disabled):active {
+      transform: scale(0.99);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.opt-correct {
+      background: var(--correct-bg);
+      border-color: var(--correct-border);
+      border-width: 2px;
+    }
+
+    .option-btn.opt-incorrect {
+      background: var(--incorrect-bg);
+      border-color: var(--incorrect-border);
+      border-width: 2px;
+    }
+
+    .option-btn.opt-dim {
+      opacity: 0.72;
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: var(--surface-variant);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opt-correct .option-letter {
+      background: var(--correct);
+      color: #FFFFFF;
+    }
+
+    .opt-incorrect .option-letter {
+      background: var(--incorrect);
+      color: #FFFFFF;
+    }
+
+    .option-label {
+      flex: 1;
+      font-size: 0.98rem;
+      line-height: 1.4;
+    }
+
+    .opt-correct .option-label {
+      font-weight: 700;
+    }
+
+    /* Instant Feedback Card */
+    .feedback-card {
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      animation: fadeUp 0.2s ease-out;
+    }
+
+    .feedback-card.correct {
+      background: var(--correct-bg);
+      border: 1px solid var(--correct-border);
+    }
+
+    .feedback-card.incorrect {
+      background: var(--incorrect-bg);
+      border: 1px solid var(--incorrect-border);
+    }
+
+    .feedback-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .feedback-card.correct .feedback-head {
+      color: var(--correct);
+    }
+
+    .feedback-card.incorrect .feedback-head {
+      color: var(--incorrect);
+    }
+
+    .feedback-exp {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Quiz Bottom Navigation */
+    .quiz-bottombar {
+      position: sticky;
+      bottom: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border-soft);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .quiz-bottombar-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .quiz-bottombar-inner .btn-primary {
+      flex: 1;
+      min-height: 50px;
+    }
+
+    /* Final Score Gauge */
+    .score-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      padding: 24px 18px;
+    }
+
+    .gauge-wrap {
+      position: relative;
+      width: 156px;
+      height: 156px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .gauge-pct {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .gauge-frac {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .tier-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.38rem;
+    }
+
+    .tier-sub {
+      margin: 0;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .stats-row {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .stat-pill {
+      border-radius: 14px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-pill.correct { background: var(--correct-bg); color: var(--correct); }
+    .stat-pill.incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
+    .stat-pill.neutral { background: var(--surface-variant); color: var(--text); }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .stat-lbl {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .result-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .review-heading {
+      margin: 6px 0 0;
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .review-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .review-item.correct {
+      border-color: color-mix(in srgb, var(--correct-border) 55%, transparent);
+    }
+
+    .review-item.incorrect {
+      border-color: color-mix(in srgb, var(--incorrect-border) 55%, transparent);
+    }
+
+    .review-slide-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .review-slide-tag.correct { color: var(--correct); }
+    .review-slide-tag.incorrect { color: var(--incorrect); }
+
+    .review-q {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .review-ans {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .review-ans.wrong { color: var(--incorrect); }
+    .review-ans.right { color: var(--correct); font-weight: 600; }
+
+    .review-exp {
+      background: color-mix(in srgb, var(--surface-variant) 65%, transparent);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Loading & Modal Overlays */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: var(--overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px 22px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 4px solid var(--surface-variant);
+      border-top-color: var(--secondary);
+      animation: spin 0.85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+    }
+
+    .modal-sub {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .topic-chip-preview {
+      max-width: 100%;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--surface-variant);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .text-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 10px 16px;
+      min-height: 44px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .dialog-actions {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .chip-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .result-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- ==================== SETUP VIEW ==================== -->
+    <main id="setup-view" class="container">
+      <header class="top-header">
+        <div class="brand-group">
+          <img
+            src="./assets/aistudio/image_a3c59f08__1__d6b6b04a.jpg"
+            alt="S Entrance Quiz Icon"
+            class="app-emblem"
+          />
+          <div class="brand-titles">
+            <h1>S Entrance Quiz</h1>
+            <p>PDF to Interactive Slide Quiz</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="icon-btn theme-toggle-btn"
+          aria-label="Toggle dark or light mode"
+          title="Toggle dark or light mode"
+        ></button>
+      </header>
+
+      <section class="card hero-card">
+        <div class="hero-banner" aria-hidden="true">
+          <svg class="hero-svg" viewBox="0 0 340 90" fill="none">
+            <rect x="24" y="18" width="90" height="62" rx="10" fill="var(--primary)" opacity="0.14" />
+            <rect x="18" y="12" width="90" height="62" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="2" />
+            <rect x="32" y="24" width="38" height="8" rx="4" fill="var(--secondary)" />
+            <line x1="32" y1="44" x2="90" y2="44" stroke="var(--primary)" stroke-opacity="0.28" stroke-width="5" stroke-linecap="round" />
+            <line x1="32" y1="56" x2="74" y2="56" stroke="var(--primary)" stroke-opacity="0.28" stroke-width="5" stroke-linecap="round" />
+            <line x1="126" y1="45" x2="188" y2="45" stroke="var(--secondary)" stroke-width="3.5" stroke-linecap="round" />
+            <polygon points="196,45 184,38 184,52" fill="var(--secondary)" />
+            <rect x="212" y="10" width="108" height="70" rx="14" fill="var(--primary)" />
+            <rect x="228" y="23" width="76" height="11" rx="5" fill="var(--on-primary)" opacity="0.28" />
+            <rect x="228" y="40" width="76" height="11" rx="5" fill="var(--secondary)" />
+            <rect x="228" y="57" width="76" height="11" rx="5" fill="var(--on-primary)" opacity="0.28" />
+          </svg>
+        </div>
+        <div class="badge-row">
+          <span class="pill-badge">GEMINI 2.5 FLASH</span>
+          <span class="subtle-note">Instant A/B/C/D Feedback</span>
+        </div>
+        <p class="hero-desc">
+          Turn any textbook or study PDF into an interactive entrance exam slide quiz.
+        </p>
+      </section>
+
+      <div id="setup-error" class="error-banner hidden" role="alert">
+        <span>&#9888;</span>
+        <div id="setup-error-text" class="error-banner-text"></div>
+        <button type="button" id="dismiss-error-btn" class="close-small-btn" aria-label="Dismiss error">&#10005;</button>
+      </div>
+
+      <!-- Step 1: PDF Upload -->
+      <section class="card">
+        <div class="section-head">
+          <div class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+          </div>
+          <h2 class="section-title">1. Study PDF</h2>
+        </div>
+
+        <input id="pdf-file-input" type="file" accept="application/pdf,.pdf" class="hidden" />
+
+        <div id="pdf-dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose PDF document">
+          <div class="dropzone-circle">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          </div>
+          <div class="dropzone-title">Choose PDF Document</div>
+          <div class="dropzone-sub">Textbooks, study guides, or entrance exam PDFs (up to 19 MB)</div>
+        </div>
+
+        <div id="pdf-selected-panel" class="hidden">
+          <div class="pdf-ready-box">
+            <div class="pdf-ready-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
+            <div class="pdf-meta">
+              <div id="pdf-name-label" class="pdf-name"></div>
+              <div id="pdf-size-label" class="pdf-size"></div>
+            </div>
+            <button type="button" id="clear-pdf-btn" class="close-small-btn" aria-label="Remove PDF">&#10005;</button>
+          </div>
+          <div style="height: 8px;"></div>
+          <button type="button" id="replace-pdf-btn" class="btn-outline full-width">Replace PDF</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Gemini API Key -->
+      <section class="card">
+        <div class="section-head">
+          <div class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+          </div>
+          <h2 class="section-title">2. Gemini API Key</h2>
+        </div>
+
+        <div class="input-wrap">
+          <input
+            id="api-key-input"
+            type="password"
+            class="text-input with-actions"
+            placeholder="Paste your Gemini API Key (AIza...)"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="input-actions">
+            <button type="button" id="toggle-key-vis-btn" class="field-action-btn" aria-label="Show API key" title="Show/Hide API key">
+              <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+            <button type="button" id="clear-key-btn" class="field-action-btn hidden" aria-label="Clear API key" title="Clear API key">
+              &#10005;
+            </button>
+          </div>
+        </div>
+        <div id="api-key-hint" class="field-hint">
+          Stored only in your browser/device and sent directly to Google Gemini API.
+        </div>
+      </section>
+
+      <!-- Step 3: Topic / Unit & Options -->
+      <section class="card">
+        <div class="section-head">
+          <div class="section-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          </div>
+          <h2 class="section-title">3. Topic or Unit</h2>
+        </div>
+
+        <input
+          id="topic-input"
+          type="text"
+          class="text-input"
+          placeholder="e.g., Grade 12 Unit 1 and 2"
+        />
+
+        <div class="sub-label">Quick presets</div>
+        <div id="preset-chips" class="chip-wrap"></div>
+
+        <div class="sub-label">Number of Slides</div>
+        <div id="count-chips" class="chip-grid"></div>
+
+        <div class="sub-label">Question Style</div>
+        <div id="difficulty-chips" class="chip-grid-2"></div>
+      </section>
+
+      <button type="button" id="generate-btn" class="btn-primary" disabled>
+        <span>&#10024;</span>
+        <span>Generate Quiz Slides</span>
+        <span>&#8594;</span>
+      </button>
+      <div id="missing-hint" class="center-hint">Upload a PDF document to continue</div>
+    </main>
+
+    <!-- ==================== QUIZ SLIDE VIEW ==================== -->
+    <section id="quiz-view" class="quiz-layout hidden">
+      <div class="quiz-topbar">
+        <div class="quiz-topbar-inner">
+          <button type="button" id="exit-quiz-btn" class="icon-btn" aria-label="Exit quiz" title="Exit quiz">
+            &#10005;
+          </button>
+          <div class="quiz-title-col">
+            <h2 id="quiz-header-title">Quiz</h2>
+            <span id="quiz-slide-counter">Slide 1 of 10</span>
+          </div>
+          <div class="score-pill" title="Current score">
+            <span>&#127942;</span>
+            <span id="live-score-text">0/10</span>
+          </div>
+          <button
+            type="button"
+            class="icon-btn theme-toggle-btn"
+            aria-label="Toggle dark or light mode"
+            title="Toggle dark or light mode"
+          ></button>
+        </div>
+        <div class="progress-track">
+          <div id="quiz-progress-fill" class="progress-fill" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <div class="quiz-body">
+        <div id="slide-strip" class="slide-strip" role="navigation" aria-label="Question slides"></div>
+
+        <div id="slide-stage" class="slide-stage">
+          <div class="card">
+            <div class="q-meta-row">
+              <span id="question-badge" class="q-badge">QUESTION 1</span>
+              <span id="question-ref" class="ref-badge hidden"></span>
+            </div>
+            <h3 id="question-text" class="question-text"></h3>
+          </div>
+
+          <div id="options-list" class="options-list"></div>
+
+          <div id="instant-feedback" class="feedback-card hidden">
+            <div id="feedback-head" class="feedback-head"></div>
+            <p id="feedback-exp" class="feedback-exp"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-bottombar">
+        <div class="quiz-bottombar-inner">
+          <button type="button" id="prev-slide-btn" class="btn-outline">&#8592; Previous</button>
+          <button type="button" id="next-slide-btn" class="btn-primary" disabled>
+            <span id="next-slide-label">Next Question</span>
+            <span>&#8594;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FINAL SCORE VIEW ==================== -->
+    <section id="result-view" class="container hidden">
+      <header class="top-header">
+        <div class="brand-titles" style="flex:1;">
+          <h1>Final Score</h1>
+          <p id="result-topic-subtitle"></p>
+        </div>
+        <button
+          type="button"
+          class="icon-btn theme-toggle-btn"
+          aria-label="Toggle dark or light mode"
+          title="Toggle dark or light mode"
+        ></button>
+      </header>
+
+      <section class="card score-card">
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 156 156">
+            <circle cx="78" cy="78" r="64" fill="none" stroke="var(--surface-variant)" stroke-width="14" />
+            <circle
+              id="score-ring-arc"
+              cx="78"
+              cy="78"
+              r="64"
+              fill="none"
+              stroke="var(--correct)"
+              stroke-width="14"
+              stroke-linecap="round"
+              stroke-dasharray="402.12"
+              stroke-dashoffset="402.12"
+              style="transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;"
+            />
+          </svg>
+          <div class="gauge-center">
+            <span id="result-pct-text" class="gauge-pct">0%</span>
+            <span id="result-frac-text" class="gauge-frac">0 of 0</span>
+          </div>
+        </div>
+
+        <h2 id="result-tier-title" class="tier-title"></h2>
+        <p id="result-tier-sub" class="tier-sub"></p>
+
+        <div class="stats-row">
+          <div class="stat-pill correct">
+            <span id="stat-correct" class="stat-val">0</span>
+            <span class="stat-lbl">Correct</span>
+          </div>
+          <div class="stat-pill incorrect">
+            <span id="stat-incorrect" class="stat-val">0</span>
+            <span class="stat-lbl">Incorrect</span>
+          </div>
+          <div class="stat-pill neutral">
+            <span id="stat-total" class="stat-val">0</span>
+            <span class="stat-lbl">Slides</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="result-actions">
+        <button type="button" id="retry-quiz-btn" class="btn-outline full-width">&#8634; Retry Slides</button>
+        <button type="button" id="new-quiz-btn" class="btn-primary">+ New Topic / PDF</button>
+      </div>
+
+      <h3 class="review-heading">Slide-by-Slide Review</h3>
+      <div id="review-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+    </section>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="overlay hidden" aria-live="polite">
+    <div class="modal-card">
+      <div class="spinner"></div>
+      <h3 id="loading-title" class="modal-title">Reading PDF Document</h3>
+      <p id="loading-sub" class="modal-sub">Preparing pages from your study file...</p>
+      <div id="loading-topic-chip" class="topic-chip-preview"></div>
+      <button type="button" id="cancel-gen-btn" class="text-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Exit Confirm Modal -->
+  <div id="exit-modal" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" style="text-align:left; align-items:stretch;">
+      <h3 class="modal-title">Leave Quiz?</h3>
+      <p class="modal-sub">Your current quiz progress will be lost if you return to setup.</p>
+      <div class="dialog-actions">
+        <button type="button" id="stay-quiz-btn" class="text-btn">Continue Quiz</button>
+        <button type="button" id="confirm-exit-btn" class="text-btn" style="color:var(--incorrect);">Leave</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const STORAGE_KEYS = {
+        API_KEY: "s_entrance_quiz_api_key",
+        TOPIC: "s_entrance_quiz_last_topic",
+        THEME: "s_entrance_quiz_theme"
+      };
+      const MAX_PDF_BYTES = 19 * 1024 * 1024;
+      const MODEL_NAME = "gemini-2.5-flash";
+      const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
+
+      const PRESETS = [
+        "Grade 12 Unit 1 and 2",
+        "Chapter 1 Core Concepts",
+        "Key Definitions & Formulas",
+        "Full Document Review"
+      ];
+      const COUNTS = [5, 10, 15, 20];
+      const DIFFICULTIES = [
+        {
+          id: "STANDARD",
+          label: "Standard Review",
+          instruction: "Balance conceptual understanding, definitions, and key unit facts."
+        },
+        {
+          id: "ENTRANCE_CHALLENGE",
+          label: "Entrance Exam",
+          instruction: "Focus on entrance-exam rigor: analytical application, tricky distractors, multi-step reasoning, and common exam pitfalls."
+        }
+      ];
+      const LETTERS = ["A", "B", "C", "D"];
+
+      const state = {
+        screen: "setup", // "setup" | "quiz" | "result"
+        pdfFile: null,
+        apiKey: localStorage.getItem(STORAGE_KEYS.API_KEY) || "",
+        showApiKey: false,
+        topic: localStorage.getItem(STORAGE_KEYS.TOPIC) || "",
+        questionCount: 10,
+        difficulty: "ENTRANCE_CHALLENGE",
+        isGenerating: false,
+        abortController: null,
+        errorMessage: null,
+        session: null,
+        currentIndex: 0
+      };
+
+      // Elements
+      const setupView = document.getElementById("setup-view");
+      const quizView = document.getElementById("quiz-view");
+      const resultView = document.getElementById("result-view");
+      const setupErrorEl = document.getElementById("setup-error");
+      const setupErrorText = document.getElementById("setup-error-text");
+      const pdfFileInput = document.getElementById("pdf-file-input");
+      const pdfDropzone = document.getElementById("pdf-dropzone");
+      const pdfSelectedPanel = document.getElementById("pdf-selected-panel");
+      const pdfNameLabel = document.getElementById("pdf-name-label");
+      const pdfSizeLabel = document.getElementById("pdf-size-label");
+      const apiKeyInput = document.getElementById("api-key-input");
+      const toggleKeyVisBtn = document.getElementById("toggle-key-vis-btn");
+      const clearKeyBtn = document.getElementById("clear-key-btn");
+      const apiKeyHint = document.getElementById("api-key-hint");
+      const topicInput = document.getElementById("topic-input");
+      const presetChipsEl = document.getElementById("preset-chips");
+      const countChipsEl = document.getElementById("count-chips");
+      const difficultyChipsEl = document.getElementById("difficulty-chips");
+      const generateBtn = document.getElementById("generate-btn");
+      const missingHint = document.getElementById("missing-hint");
+      const loadingOverlay = document.getElementById("loading-overlay");
+      const loadingTitle = document.getElementById("loading-title");
+      const loadingSub = document.getElementById("loading-sub");
+      const loadingTopicChip = document.getElementById("loading-topic-chip");
+      const exitModal = document.getElementById("exit-modal");
+
+      // Theme Management
+      function getInitialTheme() {
+        const saved = localStorage.getItem(STORAGE_KEYS.THEME);
+        if (saved === "dark" || saved === "light") return saved;
+        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem(STORAGE_KEYS.THEME, theme);
+        const sunSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>`;
+        const moonSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>`;
+        document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
+          btn.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+          btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+        });
+      }
+
+      document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const current = document.documentElement.getAttribute("data-theme") || "light";
+          applyTheme(current === "dark" ? "light" : "dark");
+        });
+      });
+
+      // Screen Switching
+      function showScreen(screen) {
+        state.screen = screen;
+        setupView.classList.toggle("hidden", screen !== "setup");
+        quizView.classList.toggle("hidden", screen !== "quiz");
+        resultView.classList.toggle("hidden", screen !== "result");
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+
+      // Utilities
+      function formatBytes(bytes) {
+        if (!bytes || bytes <= 0) return "Unknown size";
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${Math.floor(bytes / 1024)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+      }
+
+      function setError(msg) {
+        state.errorMessage = msg;
+        if (msg) {
+          setupErrorText.textContent = msg;
+          setupErrorEl.classList.remove("hidden");
+          setupErrorEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          setupErrorEl.classList.add("hidden");
+        }
+      }
+
+      function renderSetupControls() {
+        // PDF state
+        if (state.pdfFile) {
+          pdfDropzone.classList.add("hidden");
+          pdfSelectedPanel.classList.remove("hidden");
+          pdfNameLabel.textContent = state.pdfFile.name || "Selected Document.pdf";
+          pdfSizeLabel.textContent = `${formatBytes(state.pdfFile.size)} • PDF Ready`;
+        } else {
+          pdfDropzone.classList.remove("hidden");
+          pdfSelectedPanel.classList.add("hidden");
+        }
+
+        // API Key hint
+        clearKeyBtn.classList.toggle("hidden", state.apiKey.length === 0);
+        if (state.apiKey.trim()) {
+          apiKeyHint.className = "field-hint ok";
+          apiKeyHint.innerHTML = "&#10003; API key entered • Saved locally on this device";
+        } else {
+          apiKeyHint.className = "field-hint";
+          apiKeyHint.textContent = "Stored only in your browser/device and sent directly to Google Gemini API.";
+        }
+
+        // Presets
+        presetChipsEl.innerHTML = "";
+        PRESETS.forEach((preset) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `chip-btn ${state.topic.trim().toLowerCase() === preset.toLowerCase() ? "active-soft" : ""}`;
+          btn.textContent = preset;
+          btn.addEventListener("click", () => {
+            state.topic = preset;
+            topicInput.value = preset;
+            setError(null);
+            renderSetupControls();
+          });
+          presetChipsEl.appendChild(btn);
+        });
+
+        // Counts
+        countChipsEl.innerHTML = "";
+        COUNTS.forEach((c) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `chip-btn ${state.questionCount === c ? "active-primary" : ""}`;
+          btn.textContent = `${c} Qs`;
+          btn.addEventListener("click", () => {
+            state.questionCount = c;
+            renderSetupControls();
+          });
+          countChipsEl.appendChild(btn);
+        });
+
+        // Difficulties
+        difficultyChipsEl.innerHTML = "";
+        DIFFICULTIES.forEach((d) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `chip-btn ${state.difficulty === d.id ? "active-amber" : ""}`;
+          btn.textContent = d.label;
+          btn.addEventListener("click", () => {
+            state.difficulty = d.id;
+            renderSetupControls();
+          });
+          difficultyChipsEl.appendChild(btn);
+        });
+
+        // Generate button & hint
+        const canGen = Boolean(state.pdfFile && state.apiKey.trim() && state.topic.trim() && !state.isGenerating);
+        generateBtn.disabled = !canGen;
+
+        if (!canGen && !state.isGenerating) {
+          missingHint.classList.remove("hidden");
+          if (!state.pdfFile) {
+            missingHint.textContent = "Upload a PDF document to continue";
+          } else if (!state.apiKey.trim()) {
+            missingHint.textContent = "Enter your Gemini API key to continue";
+          } else if (!state.topic.trim()) {
+            missingHint.textContent = "Enter a topic or unit (e.g., Grade 12 Unit 1 and 2)";
+          }
+        } else {
+          missingHint.classList.add("hidden");
+        }
+      }
+
+      function handlePdfFile(file) {
+        if (!file) return;
+        const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+        if (!isPdf) {
+          setError("Please select a valid PDF (.pdf) file.");
+          return;
+        }
+        if (file.size === 0) {
+          setError("The selected PDF file is empty.");
+          return;
+        }
+        if (file.size > MAX_PDF_BYTES) {
+          setError("PDF exceeds the 19 MB limit for inline analysis. Please select a smaller document.");
+          return;
+        }
+        state.pdfFile = file;
+        setError(null);
+        renderSetupControls();
+      }
+
+      // Setup Event Listeners
+      pdfDropzone.addEventListener("click", () => pdfFileInput.click());
+      pdfDropzone.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          pdfFileInput.click();
+        }
+      });
+      pdfDropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        pdfDropzone.classList.add("drag-over");
+      });
+      pdfDropzone.addEventListener("dragleave", () => {
+        pdfDropzone.classList.remove("drag-over");
+      });
+      pdfDropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        pdfDropzone.classList.remove("drag-over");
+        if (e.dataTransfer?.files?.[0]) {
+          handlePdfFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      pdfFileInput.addEventListener("change", (e) => {
+        if (e.target.files?.[0]) {
+          handlePdfFile(e.target.files[0]);
+        }
+        e.target.value = "";
+      });
+
+      document.getElementById("replace-pdf-btn").addEventListener("click", () => pdfFileInput.click());
+      document.getElementById("clear-pdf-btn").addEventListener("click", () => {
+        state.pdfFile = null;
+        setError(null);
+        renderSetupControls();
+      });
+
+      apiKeyInput.value = state.apiKey;
+      apiKeyInput.addEventListener("input", (e) => {
+        state.apiKey = e.target.value;
+        localStorage.setItem(STORAGE_KEYS.API_KEY, state.apiKey.trim());
+        setError(null);
+        renderSetupControls();
+      });
+
+      toggleKeyVisBtn.addEventListener("click", () => {
+        state.showApiKey = !state.showApiKey;
+        apiKeyInput.type = state.showApiKey ? "text" : "password";
+        toggleKeyVisBtn.setAttribute("aria-label", state.showApiKey ? "Hide API key" : "Show API key");
+      });
+
+      clearKeyBtn.addEventListener("click", () => {
+        state.apiKey = "";
+        apiKeyInput.value = "";
+        localStorage.removeItem(STORAGE_KEYS.API_KEY);
+        setError(null);
+        renderSetupControls();
+      });
+
+      topicInput.value = state.topic;
+      topicInput.addEventListener("input", (e) => {
+        state.topic = e.target.value;
+        setError(null);
+        renderSetupControls();
+      });
+
+      document.getElementById("dismiss-error-btn").addEventListener("click", () => setError(null));
+
+      // Read File as Base64
+      function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = String(reader.result || "");
+            const idx = result.indexOf(",");
+            if (idx === -1) {
+              reject(new Error("Could not encode PDF file."));
+              return;
+            }
+            resolve(result.slice(idx + 1));
+          };
+          reader.onerror = () => reject(new Error("Failed to read the selected PDF file."));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function stripMarkdownFences(raw) {
+        const t = (raw || "").trim();
+        if (!t.startsWith("```")) return t;
+        return t.replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+      }
+
+      function sanitizeOptionPrefix(option) {
+        return String(option || "").replace(/^[A-Da-d][).:\-]\s+/, "").trim();
+      }
+
+      // Generate Quiz via Gemini API
+      generateBtn.addEventListener("click", async () => {
+        const cleanKey = state.apiKey.trim();
+        const cleanTopic = state.topic.trim();
+        if (!state.pdfFile) return setError("Please upload a PDF file first.");
+        if (!cleanKey) return setError("Please enter your Gemini API key.");
+        if (!cleanTopic) return setError("Please enter a topic or unit (e.g., Grade 12 Unit 1 and 2).");
+        if (!navigator.onLine) {
+          return setError("No internet connection detected. Connect to Wi-Fi or mobile data and try again.");
+        }
+
+        localStorage.setItem(STORAGE_KEYS.API_KEY, cleanKey);
+        localStorage.setItem(STORAGE_KEYS.TOPIC, cleanTopic);
+
+        state.isGenerating = true;
+        setError(null);
+        renderSetupControls();
+
+        loadingTitle.textContent = "Reading PDF Document";
+        loadingSub.textContent = "Preparing pages from your study file...";
+        loadingTopicChip.textContent = `Topic: ${cleanTopic}`;
+        loadingOverlay.classList.remove("hidden");
+
+        const controller = new AbortController();
+        state.abortController = controller;
+        const timeoutId = setTimeout(() => controller.abort("timeout"), 65000);
+
+        try {
+          const base64Pdf = await readFileAsBase64(state.pdfFile);
+          if (controller.signal.aborted) throw new DOMException("Aborted", "AbortError");
+
+          loadingTitle.textContent = "Analyzing Topic & Crafting Slides";
+          loadingSub.textContent = "Generating multiple-choice questions and explanations...";
+
+          const diffObj = DIFFICULTIES.find((d) => d.id === state.difficulty) || DIFFICULTIES[1];
+          const prompt = [
+            "You are an expert academic and entrance exam question writer.",
+            `Read the attached PDF document carefully and generate exactly ${state.questionCount} multiple-choice questions strictly based on the content covering: "${cleanTopic}".`,
+            `Difficulty mode: ${diffObj.label} — ${diffObj.instruction}`,
+            "",
+            "Requirements:",
+            `1. Every question MUST be grounded in the attached PDF, specifically targeting "${cleanTopic}". If the topic appears in specific chapters/units/sections, focus exclusively on those sections.`,
+            "2. Provide exactly 4 distinct answer choices per question (corresponding to A, B, C, D). Do NOT prefix option text with 'A.', 'B)', etc.",
+            "3. Provide correctIndex as a 0-based integer (0 for A, 1 for B, 2 for C, 3 for D).",
+            "4. Provide a concise, helpful explanation (1-2 sentences) citing why the answer is right based on the PDF.",
+            "5. Provide sourceReference indicating the unit, section, or page topic from the PDF where the concept is found."
+          ].join("\n");
+
+          const payload = {
+            contents: [
+              {
+                parts: [
+                  { inline_data: { mime_type: "application/pdf", data: base64Pdf } },
+                  { text: prompt }
+                ]
+              }
+            ],
+            generationConfig: {
+              temperature: 0.35,
+              responseMimeType: "application/json",
+              responseSchema: {
+                type: "OBJECT",
+                properties: {
+                  quizTitle: { type: "STRING", description: "Descriptive title for the quiz" },
+                  questions: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        question: { type: "STRING" },
+                        options: { type: "ARRAY", items: { type: "STRING" } },
+                        correctIndex: { type: "INTEGER" },
+                        explanation: { type: "STRING" },
+                        sourceReference: { type: "STRING" }
+                      },
+                      required: ["question", "options", "correctIndex", "explanation"]
+                    }
+                  }
+                },
+                required: ["quizTitle", "questions"]
+              }
+            }
+          };
+
+          const response = await fetch(GEMINI_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": cleanKey
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+
+          const rawBody = await response.text();
+          if (!response.ok) {
+            let apiMsg = "";
+            try {
+              apiMsg = JSON.parse(rawBody)?.error?.message || "";
+            } catch (_) {}
+            if (response.status === 400 || response.status === 401 || response.status === 403) {
+              throw new Error(apiMsg ? `API Key / Request Error: ${apiMsg}` : `Invalid Gemini API key or unauthorized request (HTTP ${response.status}).`);
+            }
+            if (response.status === 429) {
+              throw new Error("Gemini API rate limit reached. Wait a moment or check your API quota (HTTP 429).");
+            }
+            throw new Error(apiMsg || `Gemini API request failed with HTTP ${response.status}.`);
+          }
+
+          const root = JSON.parse(rawBody);
+          const candidates = root.candidates;
+          if (!candidates || !candidates.length) {
+            const blockReason = root.promptFeedback?.blockReason;
+            if (blockReason) {
+              throw new Error(`Gemini blocked this request (${blockReason}). Try a different topic or PDF.`);
+            }
+            throw new Error("Gemini did not return any quiz candidates. Please try again.");
+          }
+
+          const candidateText = (candidates[0]?.content?.parts || [])
+            .map((p) => p.text || "")
+            .join("")
+            .trim();
+          if (!candidateText) {
+            throw new Error("Gemini returned empty quiz content. Please try again.");
+          }
+
+          const dto = JSON.parse(stripMarkdownFences(candidateText));
+          const validQuestions = (dto.questions || [])
+            .map((item, idx) => {
+              const qText = String(item.question || "").trim();
+              if (!qText) return null;
+              const cleanOpts = (item.options || [])
+                .map((o) => sanitizeOptionPrefix(o))
+                .filter(Boolean)
+                .slice(0, 4);
+              if (cleanOpts.length < 2) return null;
+              while (cleanOpts.length < 4) cleanOpts.push("None of the above");
+              const safeIdx = Math.max(0, Math.min(3, Number(item.correctIndex) || 0));
+              return {
+                id: idx + 1,
+                question: qText,
+                options: cleanOpts,
+                correctIndex: safeIdx,
+                explanation: String(item.explanation || "").trim() || `Option ${LETTERS[safeIdx]} is supported by the study material.`,
+                sourceReference: String(item.sourceReference || "").trim()
+              };
+            })
+            .filter(Boolean);
+
+          if (!validQuestions.length) {
+            throw new Error(`Could not extract questions for "${cleanTopic}" from this PDF. Try a broader unit or verify the PDF contains readable text.`);
+          }
+
+          state.session = {
+            title: String(dto.quizTitle || "").trim() || cleanTopic,
+            topic: cleanTopic,
+            pdfName: state.pdfFile.name,
+            questions: validQuestions,
+            selectedAnswers: {}
+          };
+          state.currentIndex = 0;
+
+          showScreen("quiz");
+          renderQuizSlide();
+        } catch (err) {
+          if (err && err.name === "AbortError") {
+            if (controller.signal.reason === "timeout") {
+              setError("Quiz generation timed out after 65 seconds. Try fewer questions or a smaller PDF.");
+            }
+          } else {
+            setError(err?.message || "Failed to generate quiz from PDF.");
+          }
+        } finally {
+          clearTimeout(timeoutId);
+          state.isGenerating = false;
+          state.abortController = null;
+          loadingOverlay.classList.add("hidden");
+          renderSetupControls();
+        }
+      });
+
+      document.getElementById("cancel-gen-btn").addEventListener("click", () => {
+        if (state.abortController) {
+          state.abortController.abort("user");
+        }
+      });
+
+      // ==================== QUIZ SLIDE LOGIC ====================
+      function getSessionStats(session) {
+        const total = session.questions.length;
+        const correct = session.questions.filter((q) => session.selectedAnswers[q.id] === q.correctIndex).length;
+        const incorrect = session.questions.filter((q) => {
+          const s = session.selectedAnswers[q.id];
+          return s !== undefined && s !== q.correctIndex;
+        }).length;
+        const pct = total ? Math.round((correct / total) * 100) : 0;
+        return { total, correct, incorrect, pct };
+      }
+
+      function renderQuizSlide(animateSlide = true) {
+        const session = state.session;
+        if (!session) return showScreen("setup");
+
+        const total = session.questions.length;
+        const q = session.questions[state.currentIndex];
+        const selected = session.selectedAnswers[q.id];
+        const isAnswered = selected !== undefined;
+        const stats = getSessionStats(session);
+
+        document.getElementById("quiz-header-title").textContent = session.title;
+        document.getElementById("quiz-slide-counter").textContent = `Slide ${state.currentIndex + 1} of ${total}`;
+        document.getElementById("live-score-text").textContent = `${stats.correct}/${total}`;
+        document.getElementById("quiz-progress-fill").style.width = `${((state.currentIndex + 1) / total) * 100}%`;
+
+        // Slide number strip
+        const strip = document.getElementById("slide-strip");
+        strip.innerHTML = "";
+        session.questions.forEach((item, idx) => {
+          const pill = document.createElement("button");
+          pill.type = "button";
+          const ans = session.selectedAnswers[item.id];
+          let cls = "slide-num-pill";
+          if (idx === state.currentIndex) cls += " current";
+          else if (ans !== undefined) cls += ans === item.correctIndex ? " correct" : " incorrect";
+          pill.className = cls;
+          pill.textContent = String(idx + 1);
+          pill.addEventListener("click", () => {
+            state.currentIndex = idx;
+            renderQuizSlide(true);
+          });
+          strip.appendChild(pill);
+        });
+
+        // Question card
+        if (animateSlide) {
+          const stage = document.getElementById("slide-stage");
+          stage.style.animation = "none";
+          void stage.offsetWidth;
+          stage.style.animation = "";
+        }
+
+        document.getElementById("question-badge").textContent = `QUESTION ${state.currentIndex + 1}`;
+        const refEl = document.getElementById("question-ref");
+        if (q.sourceReference) {
+          refEl.textContent = q.sourceReference;
+          refEl.classList.remove("hidden");
+        } else {
+          refEl.classList.add("hidden");
+        }
+        document.getElementById("question-text").textContent = q.question;
+
+        // Options A, B, C, D
+        const optionsList = document.getElementById("options-list");
+        optionsList.innerHTML = "";
+        q.options.forEach((optText, optIdx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.disabled = isAnswered;
+
+          const isSelected = selected === optIdx;
+          const isCorrect = optIdx === q.correctIndex;
+          let cls = "option-btn";
+          if (isAnswered) {
+            if (isCorrect) cls += " opt-correct";
+            else if (isSelected) cls += " opt-incorrect";
+            else cls += " opt-dim";
+          }
+          btn.className = cls;
+
+          const badge = document.createElement("span");
+          badge.className = "option-letter";
+          badge.textContent = LETTERS[optIdx] || "?";
+
+          const lbl = document.createElement("span");
+          lbl.className = "option-label";
+          lbl.textContent = optText;
+
+          btn.appendChild(badge);
+          btn.appendChild(lbl);
+
+          if (isAnswered && (isCorrect || isSelected)) {
+            const mark = document.createElement("span");
+            mark.style.fontWeight = "700";
+            mark.style.fontSize = "1.15rem";
+            mark.style.color = isCorrect ? "var(--correct)" : "var(--incorrect)";
+            mark.textContent = isCorrect ? "✓" : "✕";
+            btn.appendChild(mark);
+          }
+
+          btn.addEventListener("click", () => {
+            if (session.selectedAnswers[q.id] !== undefined) return;
+            session.selectedAnswers[q.id] = optIdx;
+            renderQuizSlide(false);
+          });
+
+          optionsList.appendChild(btn);
+        });
+
+        // Instant Feedback Banner
+        const feedbackEl = document.getElementById("instant-feedback");
+        if (isAnswered) {
+          const gotRight = selected === q.correctIndex;
+          feedbackEl.className = `feedback-card ${gotRight ? "correct" : "incorrect"}`;
+          document.getElementById("feedback-head").textContent = gotRight
+            ? "✓ Correct!"
+            : `✕ Incorrect — Correct Answer: ${LETTERS[q.correctIndex]}`;
+          document.getElementById("feedback-exp").textContent = q.explanation;
+        } else {
+          feedbackEl.className = "feedback-card hidden";
+        }
+
+        // Bottom controls
+        const prevBtn = document.getElementById("prev-slide-btn");
+        const nextBtn = document.getElementById("next-slide-btn");
+        const isLast = state.currentIndex >= total - 1;
+        prevBtn.disabled = state.currentIndex === 0;
+        nextBtn.disabled = !isAnswered;
+        nextBtn.className = `btn-primary ${isLast ? "btn-finish" : ""}`;
+        document.getElementById("next-slide-label").textContent = isLast ? "View Final Score" : "Next Question";
+      }
+
+      document.getElementById("prev-slide-btn").addEventListener("click", () => {
+        if (state.currentIndex > 0) {
+          state.currentIndex -= 1;
+          renderQuizSlide(true);
+        }
+      });
+
+      document.getElementById("next-slide-btn").addEventListener("click", () => {
+        if (!state.session) return;
+        if (state.currentIndex < state.session.questions.length - 1) {
+          state.currentIndex += 1;
+          renderQuizSlide(true);
+        } else {
+          showScreen("result");
+          renderResults();
+        }
+      });
+
+      document.getElementById("exit-quiz-btn").addEventListener("click", () => {
+        exitModal.classList.remove("hidden");
+      });
+      document.getElementById("stay-quiz-btn").addEventListener("click", () => {
+        exitModal.classList.add("hidden");
+      });
+      document.getElementById("confirm-exit-btn").addEventListener("click", () => {
+        exitModal.classList.add("hidden");
+        showScreen("setup");
+      });
+
+      // ==================== RESULT VIEW ====================
+      function renderResults() {
+        const session = state.session;
+        if (!session) return showScreen("setup");
+
+        const { total, correct, incorrect, pct } = getSessionStats(session);
+        document.getElementById("result-topic-subtitle").textContent = session.topic;
+        document.getElementById("result-pct-text").textContent = `${pct}%`;
+        document.getElementById("result-frac-text").textContent = `${correct} of ${total}`;
+        document.getElementById("stat-correct").textContent = String(correct);
+        document.getElementById("stat-incorrect").textContent = String(incorrect);
+        document.getElementById("stat-total").textContent = String(total);
+
+        const arc = document.getElementById("score-ring-arc");
+        const circumference = 2 * Math.PI * 64;
+        arc.style.stroke = pct >= 70 ? "var(--correct)" : pct >= 45 ? "var(--secondary)" : "var(--incorrect)";
+        arc.style.strokeDashoffset = String(circumference);
+        requestAnimationFrame(() => {
+          arc.style.strokeDashoffset = String(circumference * (1 - pct / 100));
+        });
+
+        let tierTitle = "Keep Reviewing";
+        let tierSub = "Revisit the highlighted explanations below and retry the slides.";
+        if (pct >= 85) {
+          tierTitle = "Entrance Exam Ready!";
+          tierSub = `Outstanding command of ${session.topic}.`;
+        } else if (pct >= 65) {
+          tierTitle = "Strong Mastery";
+          tierSub = "You're doing well—review missed slides to sharpen edge cases.";
+        } else if (pct >= 45) {
+          tierTitle = "Solid Foundation";
+        }
+        document.getElementById("result-tier-title").textContent = tierTitle;
+        document.getElementById("result-tier-sub").textContent = tierSub;
+
+        const reviewList = document.getElementById("review-list");
+        reviewList.innerHTML = "";
+        session.questions.forEach((q, idx) => {
+          const userChoice = session.selectedAnswers[q.id];
+          const isCorrect = userChoice === q.correctIndex;
+          const card = document.createElement("article");
+          card.className = `card review-item ${isCorrect ? "correct" : "incorrect"}`;
+
+          const tag = document.createElement("div");
+          tag.className = `review-slide-tag ${isCorrect ? "correct" : "incorrect"}`;
+          tag.textContent = `${isCorrect ? "✓" : "✕"} Slide ${idx + 1}`;
+          card.appendChild(tag);
+
+          const qEl = document.createElement("h4");
+          qEl.className = "review-q";
+          qEl.textContent = q.question;
+          card.appendChild(qEl);
+
+          if (userChoice !== undefined && !isCorrect) {
+            const wrongEl = document.createElement("p");
+            wrongEl.className = "review-ans wrong";
+            wrongEl.textContent = `Your answer: ${LETTERS[userChoice]}. ${q.options[userChoice] || ""}`;
+            card.appendChild(wrongEl);
+          }
+
+          const rightEl = document.createElement("p");
+          rightEl.className = "review-ans right";
+          rightEl.textContent = `Correct answer: ${LETTERS[q.correctIndex]}. ${q.options[q.correctIndex] || ""}`;
+          card.appendChild(rightEl);
+
+          const expEl = document.createElement("div");
+          expEl.className = "review-exp";
+          expEl.textContent = q.explanation;
+          card.appendChild(expEl);
+
+          reviewList.appendChild(card);
+        });
+      }
+
+      document.getElementById("retry-quiz-btn").addEventListener("click", () => {
+        if (!state.session) return;
+        state.session.selectedAnswers = {};
+        state.currentIndex = 0;
+        showScreen("quiz");
+        renderQuizSlide(true);
+      });
+
+      document.getElementById("new-quiz-btn").addEventListener("click", () => {
+        showScreen("setup");
+      });
+
+      // Keyboard shortcuts in browser
+      document.addEventListener("keydown", (e) => {
+        if (state.screen !== "quiz" || !exitModal.classList.contains("hidden")) return;
+        const key = e.key.toUpperCase();
+        const letterMap = { A: 0, B: 1, C: 2, D: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+        if (key in letterMap) {
+          const q = state.session?.questions?.[state.currentIndex];
+          if (q && state.session.selectedAnswers[q.id] === undefined) {
+            state.session.selectedAnswers[q.id] = letterMap[key];
+            renderQuizSlide(false);
+          }
+        } else if (e.key === "ArrowRight") {
+          const nextBtn = document.getElementById("next-slide-btn");
+          if (!nextBtn.disabled) nextBtn.click();
+        } else if (e.key === "ArrowLeft") {
+          const prevBtn = document.getElementById("prev-slide-btn");
+          if (!prevBtn.disabled) prevBtn.click();
+        }
+      });
+
+      // Hook for Android WebView Back button
+      window.__handleAndroidBack = () => {
+        if (!exitModal.classList.contains("hidden")) {
+          exitModal.classList.add("hidden");
+          return true;
+        }
+        if (state.isGenerating && state.abortController) {
+          state.abortController.abort("user");
+          return true;
+        }
+        if (state.screen === "quiz") {
+          exitModal.classList.remove("hidden");
+          return true;
+        }
+        if (state.screen === "result") {
+          showScreen("setup");
+          return true;
+        }
+        return false;
+      };
+
+      // Init
+      applyTheme(getInitialTheme());
+      renderSetupControls();
+    })();
+  </script>
+</body>
+</html>

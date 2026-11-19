@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">S Entrance Quiz</string>
-    <string name="setup_subtitle">Turn any textbook or study PDF into an interactive entrance exam slide quiz.</string>
+    <string name="setup_subtitle">Turn any textbook or study PDF into an interactive entrance exam slide quiz — free with no API key required.</string>
     <string name="step_pdf_title">1. Study PDF</string>
     <string name="step_pdf_action">Choose PDF Document</string>
     <string name="step_pdf_change">Replace PDF</string>
-    <string name="step_api_key_title">2. Gemini API Key</string>
-    <string name="step_api_key_hint">Paste your Gemini API Key (AIza...)</string>
-    <string name="step_topic_title">3. Topic or Unit</string>
+    <string name="step_topic_title">2. Topic or Unit</string>
     <string name="step_topic_hint">e.g., Grade 12 Unit 1 and 2</string>
     <string name="generate_quiz_cta">Generate Quiz Slides</string>
     <string name="quiz_next">Next Question</string>

@@ -39,11 +39,8 @@ import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.ErrorOutline
-import androidx.compose.material.icons.rounded.Key
 import androidx.compose.material.icons.rounded.PictureAsPdf
 import androidx.compose.material.icons.rounded.UploadFile
-import androidx.compose.material.icons.rounded.Visibility
-import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -61,10 +58,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,9 +67,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
@@ -94,8 +84,6 @@ fun SetupScreen(
     onToggleDarkMode: () -> Unit,
     onPdfSelected: (android.net.Uri) -> Unit,
     onClearPdf: () -> Unit,
-    onApiKeyChanged: (String) -> Unit,
-    onClearApiKey: () -> Unit,
     onTopicChanged: (String) -> Unit,
     onQuestionCountSelected: (Int) -> Unit,
     onDifficultySelected: (DifficultyMode) -> Unit,
@@ -111,7 +99,6 @@ fun SetupScreen(
         }
     }
 
-    var showApiKey by remember { mutableStateOf(false) }
     val feedbackColors = LocalQuizFeedbackColors.current
 
     Box(
@@ -204,7 +191,7 @@ fun SetupScreen(
                                 color = MaterialTheme.colorScheme.secondaryContainer
                             ) {
                                 Text(
-                                    text = "GEMINI 2.5 FLASH",
+                                    text = "FREE AI • NO KEY NEEDED",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
@@ -381,93 +368,7 @@ fun SetupScreen(
                     }
                 }
 
-                // Step 2: Gemini API Key Card
-                SectionCard(
-                    title = stringResource(id = R.string.step_api_key_title),
-                    icon = Icons.Rounded.Key
-                ) {
-                    OutlinedTextField(
-                        value = uiState.apiKey,
-                        onValueChange = onApiKeyChanged,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .testTag("api_key_input"),
-                        placeholder = {
-                            Text(text = stringResource(id = R.string.step_api_key_hint))
-                        },
-                        singleLine = true,
-                        visualTransformation = if (showApiKey) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Next
-                        ),
-                        trailingIcon = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(
-                                    onClick = { showApiKey = !showApiKey },
-                                    modifier = Modifier.testTag("toggle_api_key_visibility")
-                                ) {
-                                    Icon(
-                                        imageVector = if (showApiKey) {
-                                            Icons.Rounded.VisibilityOff
-                                        } else {
-                                            Icons.Rounded.Visibility
-                                        },
-                                        contentDescription = if (showApiKey) "Hide API key" else "Show API key"
-                                    )
-                                }
-                                if (uiState.apiKey.isNotEmpty()) {
-                                    IconButton(
-                                        onClick = onClearApiKey,
-                                        modifier = Modifier.testTag("clear_api_key_button")
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Rounded.Close,
-                                            contentDescription = "Clear API key"
-                                        )
-                                    }
-                                }
-                            }
-                        },
-                        shape = RoundedCornerShape(14.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        if (uiState.apiKey.isNotBlank()) {
-                            Icon(
-                                imageVector = Icons.Rounded.CheckCircle,
-                                contentDescription = null,
-                                tint = feedbackColors.correct,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Text(
-                                text = "API key entered • Saved locally on this device",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = feedbackColors.correct
-                            )
-                        } else {
-                            Text(
-                                text = "Stored only on your device and sent directly to Google Gemini API.",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-
-                // Step 3: Topic / Unit & Quiz Options
+                // Step 2: Topic / Unit & Quiz Options
                 SectionCard(
                     title = stringResource(id = R.string.step_topic_title),
                     icon = Icons.Rounded.Book
@@ -616,7 +517,6 @@ fun SetupScreen(
                 if (!uiState.canGenerate && !uiState.isGenerating) {
                     val missingHint = when {
                         uiState.selectedPdf == null -> "Upload a PDF document to continue"
-                        uiState.apiKey.isBlank() -> "Enter your Gemini API key to continue"
                         uiState.topic.isBlank() -> "Enter a topic or unit (e.g., Grade 12 Unit 1 and 2)"
                         else -> ""
                     }

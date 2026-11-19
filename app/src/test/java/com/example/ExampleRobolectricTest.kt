@@ -1,7 +1,9 @@
 package com.example
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -11,6 +13,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.model.QuizQuestion
 import com.example.data.model.QuizSession
+import com.example.data.model.SelectedPdf
 import com.example.data.remote.GeminiQuizService
 import com.example.ui.screens.QuizSlideScreen
 import com.example.ui.screens.ResultScreen
@@ -45,7 +48,6 @@ class ExampleRobolectricTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val service = GeminiQuizService(context)
         val rawJson = """
-            ```json
             {
               "quizTitle": "Grade 12 Unit 1 and 2",
               "questions": [
@@ -58,7 +60,6 @@ class ExampleRobolectricTest {
                 }
               ]
             }
-            ```
         """.trimIndent()
 
         val session = service.parseQuizResponse(rawJson, "Grade 12 Unit 1 and 2", "biology.pdf")
@@ -71,42 +72,32 @@ class ExampleRobolectricTest {
     }
 
     @Test
-    fun `extractCandidateText unwraps Gemini REST response JSON`() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val service = GeminiQuizService(context)
-        val restBody = """
-            {
-              "candidates": [
-                {
-                  "content": {
-                    "parts": [
-                      { "text": "{\"quizTitle\":\"Unit 1\",\"questions\":[]}" }
-                    ]
-                  }
-                }
-              ]
-            }
-        """.trimIndent()
-
-        val extracted = service.extractCandidateText(restBody)
-        assertEquals("""{"quizTitle":"Unit 1","questions":[]}""", extracted)
-    }
-
-    @Test
-    fun `SetupScreen displays upload, API key input, topic input, and dark mode toggle`() {
+    fun `SetupScreen is keyless, shows upload, topic input, dark mode toggle, and enables generate without API key`() {
         var toggled = false
-        var enteredKey = ""
+        var enteredTopic = ""
+        val readyState = SetupUiState(
+            selectedPdf = SelectedPdf(
+                uri = Uri.parse("content://com.example/biology.pdf"),
+                displayName = "biology.pdf",
+                sizeBytes = 1024L * 512L
+            ),
+            topic = "Grade 12 Unit 1 and 2"
+        )
+        assertTrue(readyState.canGenerate)
+
+        val inputState = SetupUiState(
+            selectedPdf = readyState.selectedPdf,
+            topic = ""
+        )
         composeRule.setContent {
             SEntranceQuizTheme(darkTheme = false) {
                 SetupScreen(
-                    uiState = SetupUiState(),
+                    uiState = readyState,
                     isDarkMode = false,
                     onToggleDarkMode = { toggled = true },
                     onPdfSelected = {},
                     onClearPdf = {},
-                    onApiKeyChanged = { enteredKey = it },
-                    onClearApiKey = {},
-                    onTopicChanged = {},
+                    onTopicChanged = { enteredTopic = it },
                     onQuestionCountSelected = {},
                     onDifficultySelected = {},
                     onDismissError = {},
@@ -117,13 +108,14 @@ class ExampleRobolectricTest {
         }
 
         composeRule.onNodeWithText("S Entrance Quiz").assertIsDisplayed()
+        composeRule.onNodeWithTag("api_key_input").assertDoesNotExist()
         composeRule.onNodeWithTag("dark_mode_toggle_button").performClick()
         assertTrue(toggled)
-        composeRule.onNodeWithTag("upload_pdf_button").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("api_key_input").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("api_key_input").performTextInput("AIzaTestKey123")
-        assertEquals("AIzaTestKey123", enteredKey)
         composeRule.onNodeWithTag("topic_input").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("topic_input").performTextInput("X")
+        assertTrue(enteredTopic.contains("X") && enteredTopic.contains("Grade 12 Unit 1 and 2"))
+        composeRule.onNodeWithTag("generate_quiz_button").performScrollTo().assertIsEnabled()
+        assertEquals("", inputState.topic)
     }
 
     @Test
