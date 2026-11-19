@@ -1,0 +1,6 @@
+{
+  "name": "S Entrance Quiz",
+  "description": "Upload a PDF, enter your Gemini API key and target unit or topic, and practice interactive A/B/C/D slide quizzes with instant feedback and scoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
